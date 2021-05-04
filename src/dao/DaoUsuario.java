@@ -32,7 +32,7 @@ public class DaoUsuario {
 	 */
 	public void salvar(BeanCursoJsp usuario) {
 		try {
-			String sql = "INSERT INTO usuario(login, senha, nome, telefone, cep, rua, bairro, cidade, estado, ibge,fotobase64,contenttype) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?,?)";
+			String sql = "INSERT INTO usuario(login, senha, nome, telefone, cep, rua, bairro, cidade, estado, ibge, fotobase64, contenttype, curriculobase64, contenttypecurriculo) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement insert = connection.prepareStatement(sql);
 			insert.setString(1, usuario.getLogin());
 			insert.setString(2, usuario.getSenha());
@@ -46,6 +46,8 @@ public class DaoUsuario {
 			insert.setString(10, usuario.getIbge());
 			insert.setString(11, usuario.getFotoBase64());
 			insert.setString(12, usuario.getContentType());
+			insert.setString(13, usuario.getCurriculoBase64());
+			insert.setString(14, usuario.getContentTypeCurriculo());
 			insert.execute();
 			connection.commit();
 		} catch(Exception e) {
@@ -82,6 +84,8 @@ public class DaoUsuario {
 				beanCursoJsp.setIbge(resultSet.getString("ibge"));
 				beanCursoJsp.setContentType(resultSet.getString("contenttype"));
 				beanCursoJsp.setFotoBase64(resultSet.getString("fotobase64"));
+				beanCursoJsp.setCurriculoBase64(resultSet.getString("curriculobase64"));
+				beanCursoJsp.setContentTypeCurriculo(resultSet.getString("contenttypecurriculo"));
 				listar.add(beanCursoJsp);
 			}
 			return listar;
@@ -134,6 +138,8 @@ public class DaoUsuario {
 				beanCursoJsp.setIbge(resultSet.getString("ibge"));
 				beanCursoJsp.setFotoBase64(resultSet.getString("fotobase64"));
 				beanCursoJsp.setContentType(resultSet.getString("contenttype"));
+				beanCursoJsp.setCurriculoBase64(resultSet.getString("curriculobase64"));
+				beanCursoJsp.setContentTypeCurriculo(resultSet.getString("contenttypecurriculo"));
 				return beanCursoJsp;
 			}
 		return null; /*fotobase64, contenttype*/
@@ -146,6 +152,17 @@ public class DaoUsuario {
 	 */
 	public boolean validarLogin(String login) throws Exception {
 		String sql = "SELECT COUNT(1) as qtde FROM usuario WHERE login = '"+ login +"'";
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		ResultSet resultSet = preparedStatement.executeQuery();
+			if(resultSet.next()) {
+				return resultSet.getInt("qtde") <= 0;
+			}
+		return false;
+	}
+	
+	
+	public boolean validarLogin(String login, String id) throws Exception {
+		String sql = "SELECT COUNT(1) as qtde FROM usuario WHERE login = '"+ login +"' and id <> " + id;
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		ResultSet resultSet = preparedStatement.executeQuery();
 			if(resultSet.next()) {
@@ -176,7 +193,10 @@ public class DaoUsuario {
 	 */
 	public void atualizar(BeanCursoJsp usuario) {
 		try {
-			String sql = "UPDATE usuario SET login = ?, senha = ?, nome = ?, telefone = ?, cep = ?, rua = ?, bairro = ?, cidade = ?, estado = ?, ibge = ? WHERE id = "+ usuario.getId();
+			String sql = "UPDATE usuario SET login = ?, senha = ?, nome = ?, telefone = ?,"
+					+ " cep = ?, rua = ?, bairro = ?, cidade = ?, "
+					+ "estado = ?, ibge = ?,fotobase64 =?,contenttype =?,"
+					+ "curriculobase64 = ?,contenttypecurriculo = ? WHERE id = "+ usuario.getId();
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, usuario.getLogin());
 			preparedStatement.setString(2, usuario.getSenha());
@@ -188,6 +208,11 @@ public class DaoUsuario {
 			preparedStatement.setString(8, usuario.getCidade());
 			preparedStatement.setString(9, usuario.getEstado());
 			preparedStatement.setString(10, usuario.getIbge());
+			preparedStatement.setString(11, usuario.getFotoBase64());
+			preparedStatement.setString(12, usuario.getContentType());
+			preparedStatement.setString(13, usuario.getCurriculoBase64());
+			preparedStatement.setString(14, usuario.getContentTypeCurriculo());
+			
 			preparedStatement.executeUpdate();
 			connection.commit();
 		} catch(Exception e) {
