@@ -40,7 +40,6 @@ public class ServletsTelefone extends HttpServlet {
 				request.setAttribute("userEscolhido", usuario);
 				RequestDispatcher view = request.getRequestDispatcher("/telefones.jsp");
 				request.setAttribute("telefones", daoTelefones.listar(usuario.getId()));
-				request.setAttribute("msg", "Salvo Com Sucesso!");
 				view.forward(request, response);
 			} else if (acao.endsWith("deleteFone")) {
 				String foneId = request.getParameter("foneId");
@@ -65,6 +64,22 @@ public class ServletsTelefone extends HttpServlet {
 			BeanCursoJsp beanCursoJsp = (BeanCursoJsp) request.getSession().getAttribute("userEscolhido");
 			String numero = request.getParameter("numero");
 			String tipo = request.getParameter("tipo");
+			String acao = request.getParameter("acao");
+			
+			//botao voltar da tela de telefones
+			if(acao == null ||(acao != null &&  !acao.equalsIgnoreCase("voltar"))) {
+			
+		    if(numero == null || (numero != null && numero.isEmpty())) {
+		    	
+		    	//validaçao caso o campo telefone esteja vazio
+		    	RequestDispatcher view = request.getRequestDispatcher("/telefones.jsp");
+				request.setAttribute("telefones", daoTelefones.listar(beanCursoJsp.getId()));
+				request.setAttribute("msg", "Informe o numero do telefone !");
+				view.forward(request, response);
+		    	
+		    	
+		    	
+		    }else {
 
 			Telefones telefones = new Telefones();
 
@@ -80,6 +95,16 @@ public class ServletsTelefone extends HttpServlet {
 			request.setAttribute("telefones", daoTelefones.listar(beanCursoJsp.getId()));
 			request.setAttribute("msg", "Salvo Com Sucesso!");
 			view.forward(request, response);
+		    
+		    }
+		    
+			}else {
+				//redirecionamento paro a pagina de cadastro de usuarios 
+				RequestDispatcher view = request.getRequestDispatcher("/cadastroUsuario.jsp");
+				request.setAttribute("usuarios", daoUsuario.listar());
+				view.forward(request, response);
+			}
+		    
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

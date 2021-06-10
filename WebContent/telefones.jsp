@@ -14,8 +14,9 @@
 	<a href="index.jsp">Sair</a>
 	<center>
 		<h1>Cadastro de Telefones</h1>
-		<h3 style="color:orange"></h3>
 	</center>
+	
+	<center><h2 style="color:orange;">${msg}</h2></center>
 	<form action="salvarTelefones" method="post" id="formUser" >
 		<ul class="form-style-1">
 			<li>
@@ -29,7 +30,7 @@
 						<td>Número:</td>
 						<td><input type="text" id="numero" name="numero" value="" /></td>
 						<td>
-							<select id="tipo" name="tipo">
+							<select id="tipo" name="tipo" style="width:184px">
 								<option>Celular</option>
 								<option>Casa</option>
 								<option>Trabalho</option>
@@ -41,9 +42,15 @@
 					<tr>
 						<td></td>
 						<td>
-							<input type="submit" value="Salvar" />
+							<input type="submit" value="Salvar" style="width:184px" />
+						</td>
+						
+						<td>
+							<input type="submit" style="width:184px"
+							value="Voltar" onclick="document.getElementById('formUser').action='salvarTelefones?acao=voltar'">
 						</td>
 					</tr>
+					
 				</table>
 			</li>
 		</ul>

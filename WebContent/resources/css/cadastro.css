@@ -147,12 +147,14 @@ select{
 .responsive-table tbody,
 .responsive-table tr,
 .responsive-table th,
-.responsive-table td {
+.responsive-table td {s
   display: block;
   padding: 0;
   text-align: left;
   white-space: normal;
-}
+  hover:background-color:"green";
+
+
 @media (min-width: 48em) {
   .responsive-table tr {
     display: table-row;

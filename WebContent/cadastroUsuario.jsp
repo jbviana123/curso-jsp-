@@ -32,13 +32,13 @@
 					</tr>
 					<tr>
 						<td>Login:</td>
-						<td><input type="text" id="login" name="login" value="${user.login}" /></td>
+						<td><input type="text" id="login" name="login" value="${user.login}" maxlength="8"/></td>
 						<td>Rua:</td>
 						<td><input type="text" id="rua" name="rua" value="${user.rua}" /></td>
 					</tr>
 					<tr>
 						<td>Senha:</td>
-						<td><input type="password" id="senha" name="senha" value="${user.senha}" /></td>
+						<td><input type="password" id="senha" name="senha" value="${user.senha}" maxlength="8"/></td>
 						<td>Bairro:</td>
 						<td><input type="text" id="bairro" name="bairro" value="${user.bairro}" /></td>
 					</tr>
@@ -48,17 +48,12 @@
 						<td>Cidade:</td>
 						<td><input type="text" id="cidade" name="cidade" value="${user.cidade}" /></td>
 					</tr>
-					<tr>
-						<td>Telefone:</td>
-						<td><input type="text" id="telefone" name="telefone" value="${user.telefone}" /></td>
-						<td>Estado:</td>
-						<td><input type="text" id="estado" name="estado" value="${user.estado}" /></td>
-					</tr>
+				
 					<tr>
 						<td>IBGE:</td>
 						<td><input type="text" id="ibge" name="ibge" value="${user.ibge}" /></td>
 					</tr>
-
+                        <td></td>
 					<tr>
 						<td>
 						   Foto:	
@@ -77,10 +72,17 @@
 						<input type="text" name="fotoTempPdf" style="display:none" readonly = "readonly" value="${user.curriculoBase64 }"/> </td>
 						<input type="text" name="contentTypePdf" style="display:none" readonly = "readonly" value="${user.contentTypeCurriculo }"/> </td>
 					</tr>
-					
+					    <td></td>
 					<tr>
 						<td></td>
-						<td><input type="submit" value="Salvar" />  <input type="submit" value="Cancelar" onclick="document.getElementById('formUser').action = 'salvarUsuario?acao=reset'" /></td>
+						<td>
+						    <input type="submit" value="Salvar" style="width:184px"/>
+						</td>
+						
+						<td></td>
+						 <td>
+						     <input type="submit" value="Cancelar" style="width:184px" onclick="document.getElementById('formUser').action = 'salvarUsuario?acao=reset'" />
+						 </td>
 					</tr>
 					
 				</table>
@@ -102,8 +104,39 @@
 			<c:forEach items="${usuarios}" var="user">
 				<tr>
 					<td><c:out value="${user.id}" /></td>
-					<td><a href="salvarUsuario?acao=download&tipo=imagem&user=${user.id}"><img src='<c:out value="${user.tempFotoUser}"/>' alt="Imagem User" title="Imagem User" width="32px" height="32px" /> </a></td>
-					<td><a href="salvarUsuario?acao=download&tipo=curriculo&user=${user.id}">Curriculo</a></td>
+					
+					<%--testando se existe a foto na tabela --%>
+					
+					<c:if test="${user.fotoBase64.isEmpty()==false}">
+					    <%--se nao for vazio cai aqui --%>
+					    <td><a href="salvarUsuario?acao=download&tipo=imagem&user=${user.id}">
+					<img src='<c:out value="${user.tempFotoUser}"/>' alt="Imagem User" title="Imagem User" width="32px" height="32px" /> </a></td>
+					</c:if>
+					
+					<c:if test="${user.fotoBase64.isEmpty() ==true }">
+					     <%--se for vazio cai aqui --%>
+					     <td><img alt="Imagem user" src="resources/img/userpadrao2.jpg" 
+					     width="32px" heigth="32px" onclick="alert('Adicione uma foto')"></td>   
+					</c:if>
+					<%--testando se existe a foto na tabela --%>
+					
+					<%--testando se existe curriculo na tabela --%>
+					<c:if test="${user.curriculoBase64.isEmpty() == false }">
+					    <td>
+					        <%-- se verdade cai aqui --%>
+					        <a href="salvarUsuario?acao=download&tipo=curriculo&user=${user.id}"><img alt=" Curriculo" src="resources/img/pdf.png" width="32px" heigth="32px" ></a>
+					    </td>
+					</c:if>
+					<c:if test="${user.curriculoBase64.isEmpty() == true }">
+					    <td>
+					        <%-- se falso cai aqui --%>
+					        <img alt=" Curriculo" src="resources/img/pdf.png" width="32px" heigth="32px" 
+					             onclick= "alert('Adicione um arquivo ')"></a>
+					    </td>
+					</c:if>
+					
+					<%--testando se existe curriculo na tabela --%>
+										
 					<td><c:out value="${user.nome}" /></td>
 					<td><a href="salvarUsuario?acao=delete&user=${user.id}"><img src="resources/img/icon.png" alt="Excluir" title="Excluir" width="32px" height="32px" /></a></td>
 					<td><a href="salvarUsuario?acao=editar&user=${user.id}"><img src="resources/img/editar.png" alt="Editar" title="Editar" /></a></td>
